@@ -1,0 +1,452 @@
+#nexus
+
+begin taxa;
+  dimensions ntax=6;
+  taxlabels
+	'P. fimbriata'
+	'P. robusta'
+	'P. americana'
+	'P. myriophylla'
+	'P. polygama'
+	'P. macrophylla'
+  ;
+end;
+
+[!
+*************
+* Standard  *
+*************
+]
+begin characters;
+  dimensions nchar=45;
+  format datatype=dna missing=? gap=-;
+  matrix
+	P._fimbriata    acctcggcttaacgaacctcggcttaacgaacctcggcttaacga
+	P._robusta      acctcggcttaaccaacctcggcttaacgaacctcggcttaacga
+	P._americana    acgtcgctttca---acgtcgctttcaccaacgtcgctttcacca
+	P._myriophylla  acgtcgctttca---acgtcgctttcaccaacgtc?ctttcacca
+	P._polygama     acgtcgctctcaccaacgtcgctttcaccaacgtc?ctttcacca
+	P._macrophylla  acgtcgctctcaccaacgtcgctttcaccaacgtcgctttcacca
+  ;
+end;
+
+[!
+**********
+* Tokens *
+**********
+]
+begin characters;
+  dimensions nchar=3;
+  charstatelabels
+	1 'leaf margins' / entire fimbriate,
+	2 'flower color' / 'white to cream' crimson,
+	3 'breeding system' / hermaphroditic gynomonoecious gynodioecious dioecious
+  ;
+  format tokens;
+  matrix
+	P._fimbriata    fimbriate  crimson         gynomonoecious
+	P._robusta      fimbriate  crimson         gynomonoecious
+	P._americana    entire     white_to_cream  hermaphroditic
+	P._myriophylla  entire     white_to_cream  hermaphroditic
+	P._polygama     entire     white_to_cream  dioecious
+	P._macrophylla  entire     crimson         gynodioecious
+  ;
+end;
+
+[!
+***********
+* Symbols *
+***********
+]
+begin characters;
+  dimensions nchar=3;
+  charstatelabels
+	1 'leaf margins' / entire fimbriate,
+	2 'flower color' / 'white to cream' crimson,
+	3 'breeding system' / hermaphroditic gynomonoecious gynodioecious dioecious
+  ;
+  format notokens symbols="0123";
+  matrix
+	P._fimbriata    111
+	P._robusta      111
+	P._americana    000
+	P._myriophylla  000
+	P._polygama     003
+	P._macrophylla  012
+  ;
+end;
+
+[!
+*****************************
+* Interleaved, missing taxa *
+*****************************
+]
+begin characters;
+  dimensions ntax=4 nchar=15;
+  format datatype=dna interleave;
+  matrix
+	P._fimbriata    acctcggc
+	P._robusta      acctcggc
+	P._americana    acgtcgct
+	P._myriophylla  acgtcgct
+
+	P._fimbriata    ttaacga
+	P._robusta      ttaacca
+	P._americana    ctcacca
+	P._myriophylla  ttcacca
+  ;
+end;
+
+[!
+****************
+** transposed **
+****************
+]
+
+begin characters;
+  dimensions nchar=15;
+  format datatype=dna transpose;
+  matrix
+      site_1   aaaaaa
+      site_2   cccccc
+      site_3   ccggcc
+      site_4   tttttt
+      site_5   cccccc
+      site_6   gggggg
+      site_7   ggcccc
+      site_8   cctttt
+      site_9   ttcttt
+      site_10  tttttt
+      site_11  aacccc
+      site_12  aaaaaa
+      site_13  cccccc
+      site_14  gcccgg
+      site_15  aaaaaa
+  ;
+end;
+
+
+
+begin taxa;
+  dimensions ntax=8;
+  taxlabels taxon_1 taxon_2 taxon_3 taxon_4 taxon_5 taxon_6 taxon_7 taxon_8;
+end;
+
+[!
+***************************************************
+* Non-interleaved, lower-triangular, no diagonals *
+***************************************************
+]
+begin distances;
+  format nodiagonal;
+  matrix
+    taxon_1
+    taxon_2    1
+    taxon_3    2   3
+    taxon_4    4   5   6
+    taxon_5    7   8   9  10
+    taxon_6   11  12  13  14  15
+    taxon_7   16  17  18  19  20  21
+    taxon_8   22  23  24  25  26  27  28;
+end;
+
+[!
+************************************************
+* Non-interleaved, lower-triangular, diagonals *
+************************************************
+]
+begin distances;
+  matrix
+    taxon_1    0
+    taxon_2    1   0
+    taxon_3    2   3   0
+    taxon_4    4   5   6   0
+    taxon_5    7   8   9  10   0
+    taxon_6   11  12  13  14  15   0
+    taxon_7   16  17  18  19  20  21   0
+    taxon_8   22  23  24  25  26  27  28   0;
+end;
+
+[!
+***************************************************
+* Non-interleaved, upper-triangular, no diagonals *
+***************************************************
+]
+begin distances;
+  format triangle=upper nodiagonal;
+  matrix
+    taxon_1    1   2   3   4   5   6   7
+    taxon_2        8   9  10  11  12  13
+    taxon_3           14  15  16  17  18
+    taxon_4               19  20  21  22
+    taxon_5                   23  24  25
+    taxon_6                       26  27
+    taxon_7                           28
+    taxon_8;
+end;
+
+[!
+************************************************
+* Non-interleaved, upper-triangular, diagonals *
+************************************************
+]
+begin distances;
+  format triangle=upper;
+  matrix
+    taxon_1    0  1   2   3   4   5   6   7
+    taxon_2       0   8   9  10  11  12  13
+    taxon_3           0  14  15  16  17  18
+    taxon_4               0  19  20  21  22
+    taxon_5                   0  23  24  25
+    taxon_6                       0  26  27
+    taxon_7                           0  28
+    taxon_8                               0;
+end;
+
+[!
+*******************************************
+* Non-interleaved, rectangular, diagonals *
+*******************************************
+]
+begin distances;
+  format triangle=both;
+  matrix
+    taxon_1    0   1   2   3   4   5   6   7
+    taxon_2    1   0   8   9  10  11  12  13
+    taxon_3    2   3   0  14  15  16  17  18
+    taxon_4    4   5   6   0  19  20  21  22
+    taxon_5    7   8   9  10   0  23  24  25
+    taxon_6   11  12  13  14  15   0  26  27
+    taxon_7   16  17  18  19  20  21   0  28
+    taxon_8   22  23  24  25  26  27  28   0;
+end;
+
+[!
+***********************************************
+* Interleaved, lower-triangular, no diagonals *
+***********************************************
+]
+begin distances;
+  format nodiagonal interleave;
+  matrix
+    taxon_1
+    taxon_2   1
+    taxon_3   2  3
+    taxon_4   4  5
+    taxon_5   7  8
+    taxon_6  11 12
+    taxon_7  16 17
+    taxon_8  22 23
+
+    taxon_3
+    taxon_4   6
+    taxon_5   9 10
+    taxon_6  13 14 15
+    taxon_7  18 19 20
+    taxon_8  24 25 26
+
+    taxon_6
+    taxon_7  21
+    taxon_8  27 28;
+end;
+
+[!
+********************************************
+* Interleaved, lower-triangular, diagonals *
+********************************************
+]
+begin distances;
+  format interleave;
+  matrix
+    taxon_1   0
+    taxon_2   1  0
+    taxon_3   2  3
+    taxon_4   4  5
+    taxon_5   7  8
+    taxon_6  11 12
+    taxon_7  16 17
+    taxon_8  22 23
+
+    taxon_3   0
+    taxon_4   6  0
+    taxon_5   9 10  0
+    taxon_6  13 14 15
+    taxon_7  18 19 20
+    taxon_8  24 25 26
+
+    taxon_6   0
+    taxon_7  21  0
+    taxon_8  27 28  0;
+end;
+
+[!
+***********************************************
+* Interleaved, upper-triangular, no diagonals *
+***********************************************
+]
+begin distances;
+  format nodiagonal triangle=upper interleave;
+  matrix
+    taxon_1      1  2
+    taxon_2         8
+    taxon_3
+
+    taxon_1   3   4
+    taxon_2   9  10
+    taxon_3  14  15
+    taxon_4      19
+    taxon_5
+
+    taxon_1   5   6   7
+    taxon_2  11  12  13
+    taxon_3  16  17  18
+    taxon_4  20  21  22
+    taxon_5  23  24  25
+    taxon_6      26  27
+    taxon_7          28
+    taxon_8;
+end;
+
+[!
+********************************************
+* Interleaved, upper-triangular, diagonals *
+********************************************
+]
+begin distances;
+  format triangle=upper interleave;
+  matrix
+    taxon_1   0  1  2
+    taxon_2      0  8
+    taxon_3         0
+
+    taxon_1   3   4
+    taxon_2   9  10
+    taxon_3  14  15
+    taxon_4   0  19
+    taxon_5       0
+
+    taxon_1   5   6   7
+    taxon_2  11  12  13
+    taxon_3  16  17  18
+    taxon_4  20  21  22
+    taxon_5  23  24  25
+    taxon_6   0  26  27
+    taxon_7       0  28
+    taxon_8           0;
+end;
+
+[!
+******************************************
+* Interleaved, rectangular, no diagonals *
+******************************************
+]
+begin distances;
+  format interleave triangle=both;
+  matrix
+    taxon_1   0   1   2   3
+    taxon_2   1   0   8   9
+    taxon_3   2   3   0  14
+    taxon_4   4   5   6   0
+    taxon_5   7   8   9  10
+    taxon_6  11  12  13  14
+    taxon_7  16  17  18  19
+    taxon_8  22  23  24  25
+
+    taxon_1   4   5
+    taxon_2  10  11
+    taxon_3  15  16
+    taxon_4  19  20
+    taxon_5   0  23
+    taxon_6  15   0
+    taxon_7  20  21
+    taxon_8  26  27
+
+    taxon_1   6   7
+    taxon_2  12  13
+    taxon_3  17  18
+    taxon_4  21  22
+    taxon_5  24  25
+    taxon_6  26  27
+    taxon_7   0  28
+    taxon_8  28   0;
+end;
+
+
+
+[!Output comment before first block]
+
+begin paup; [this is an unknown block]
+	lset nst=2 basefreq=empirical tratio=estimate rates=gamma shape=estimate;
+end;
+
+[!Let's see if we can deal with [nested] comments]
+
+[!
+What happens if we do this!
+]
+
+begin [comment at beginning of token]taxa;
+	dimensions[comment at end of token] ntax=11;
+	taxlabels  [comment between tokens]
+		P._fimbriata
+		'P. robusta'
+		'P. americana'
+		'P. myriophylla'
+		'P. articulata'
+		'P. parksii'
+		'P. gracilis'
+		'P. macrophylla'
+		'P. polygama'
+		'P. basiramia'
+		'P. ciliata'
+		[!output comment in TAXLABELS command]
+	;
+end;
+
+begin trees;
+	translate
+		1  P._fimbriata,
+		2  P._robusta,
+		3  P._americana,
+		4  P._myriophylla,
+		5  P._articulata,
+		6  P._parksii,
+		7  P._polygama,
+		8  P._macrophylla,
+		9  P._gracilis,
+		10  P._basiramia,
+		11  P._ciliata
+	;
+	utree unrooted =      (1,2,((4,3,(5,6)),((7,8),(9,(10,11)))));
+	tree  rooted   =      ((1,2),((4,3,(5,6)),(7,(8,(9,(10,11))))));
+	utree u_to_r   = [&R] ((1,2),((4,3,(5,6)),(7,(8,(9,(10,11))))));
+	tree  r_to_u   = [&U] (1,2,((4,3,(5,6)),((7,8),(9,(10,11)))));
+end;
+
+
+begin taxa;
+  dimensions ntax=10;
+  taxlabels
+    taxon_1
+    taxon_2
+    taxon_3
+    taxon_4
+    taxon_5
+    taxon_6
+    taxon_7
+    taxon_8
+    taxon_9
+    taxon_10
+    ;
+end;
+
+begin unaligned;
+  dimensions ntax=5;
+  format datatype=dna;
+  matrix
+    taxon_10 ACYAGGACTAGATCAAGTT,
+    taxon_2 ACCAGGAC(CT)AGCGGATCAAG,
+    taxon_7 ACCAGGACTAGATCAAG,
+    taxon_4 AGCCAGGACTAGTTC,
+    taxon_5 {AG}TCAGGACNAGA?CAAGTTC;
+end;
